@@ -701,6 +701,8 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
   private Date historyCleanupBatchWindowStartTimeAsDate;
   private Date historyCleanupBatchWindowEndTimeAsDate;
 
+  private int historyCleanupNumberOfThreads = 1;
+
   protected String batchOperationHistoryTimeToLive;
   protected Map<String, String> batchOperationsForHistoryCleanup;
   protected Map<String, Integer> parsedBatchOperationsForHistoryCleanup;
@@ -3840,6 +3842,14 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
 
   public String getBatchOperationHistoryTimeToLive() {
     return batchOperationHistoryTimeToLive;
+  }
+
+  public int getHistoryCleanupNumberOfThreads() {
+    return historyCleanupNumberOfThreads;
+  }
+
+  public void setHistoryCleanupNumberOfThreads(int historyCleanupNumberOfThreads) {
+    this.historyCleanupNumberOfThreads = historyCleanupNumberOfThreads;
   }
 
   public void setBatchOperationHistoryTimeToLive(String batchOperationHistoryTimeToLive) {

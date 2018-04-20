@@ -200,7 +200,14 @@ public interface HistoryService {
    * Finds history cleanup job if present.
    * @return job entity
    */
+  @Deprecated
   Job findHistoryCleanupJob();
+
+  /**
+   * Finds history cleanup job if present.
+   * @return job entity
+   */
+  List<Job> findHistoryCleanupJobs();
 
   /**
    * Deletes historic process instances asynchronously. All historic activities, historic task and
