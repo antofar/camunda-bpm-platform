@@ -304,22 +304,35 @@
       ci.CASE_DEF_ID_ = cd.ID_
       AND not cd.HISTORY_TTL_ is NULL
       AND ${dayComparator}
-    <if test="parameter.minuteFrom != null and parameter.minuteTo != null">
-      AND ${datepart1}<include refid="org.camunda.bpm.engine.impl.persistence.entity.ReportResultEntity.periodUnitFunction"/>${datepart2}ci.CLOSE_TIME_${datepart3}
-      between #{parameter.minuteFrom, jdbcType=INTEGER} and #{parameter.minuteTo, jdbcType=INTEGER}
-    </if>
-    ${limitAfterWithoutOffset}
   </sql>
 
   <select id="selectHistoricCaseInstanceIdsForCleanup" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultType="string">
     SELECT ${limitBeforeWithoutOffset} ci.ID_, ci.CLOSE_TIME_
     <include refid="selectHistoricCaseInstanceIdsForCleanupSql"/>
+    <include refid="andWhereMinuteInDateBetweenSql"/>
+    ${limitAfterWithoutOffset}
   </select>
 
   <select id="selectHistoricCaseInstanceIdsForCleanup_oracle" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultType="string">
     SELECT /*+ FIRST_ROWS(${maxResults}) NO_PARALLEL(ci) NO_PARALLEL(cd) */ ci.ID_, ci.CLOSE_TIME_
     <include refid="selectHistoricCaseInstanceIdsForCleanupSql"/>
+    <include refid="andWhereMinuteInDateBetweenSql_oracle"/>
+    ${limitAfterWithoutOffset}
   </select>
+
+  <sql id="andWhereMinuteInDateBetweenSql">
+    <if test="parameter.minuteFrom != null and parameter.minuteTo != null">
+      AND ${datepart1}<include refid="org.camunda.bpm.engine.impl.persistence.entity.Commons.periodUnitFunction"/>${datepart2}ci.CLOSE_TIME_${datepart3}
+      between #{parameter.minuteFrom, jdbcType=INTEGER} and #{parameter.minuteTo, jdbcType=INTEGER}
+    </if>
+  </sql>
+
+  <sql id="andWhereMinuteInDateBetweenSql_oracle">
+    <if test="parameter.minuteFrom != null and parameter.minuteTo != null">
+      AND ${datepart1}ci.CLOSE_TIME_${datepart2}<include refid="org.camunda.bpm.engine.impl.persistence.entity.Commons.periodUnitFunction"/>${datepart3}
+      between #{parameter.minuteFrom, jdbcType=INTEGER} and #{parameter.minuteTo, jdbcType=INTEGER}
+    </if>
+  </sql>
 
   <!-- Select History Cleanup Report Entities -->
   <select id="selectFinishedCaseInstancesReportEntitiesCount" parameterType="org.camunda.bpm.engine.impl.CleanableHistoricCaseInstanceReportImpl" resultType="long">

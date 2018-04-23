@@ -106,20 +106,6 @@ public class HistoryCleanupTest {
       configuration.setHistoryCleanupBatchThreshold(10);
       configuration.setDefaultNumberOfRetries(5);
       configuration.setHistoryCleanupNumberOfThreads(NUMBER_OF_THREADS);
-
-
-//      configuration.setHistoryCleanupBatchThreshold(1);
-//      configuration.setHistoryCleanupBatchWindowStartTime("00:01");
-//      configuration.setJobExecutorActivate(true);
-//      configuration.setMetricsEnabled(true);
-//      final DefaultJobExecutor jobExecutor = new DefaultJobExecutor();
-//      jobExecutor.setWaitIncreaseFactor(1);
-//      jobExecutor.setMaxWait(1000L);
-//      configuration.setJobExecutor(jobExecutor);
-//      configuration.setHistoryCleanupNumberOfThreads(1);
-//      configuration.setHistoryCleanupBatchSize(500);
-//      configuration.setHistoryCleanupBatchThreshold(0);
-
       return configuration;
     }
   };
@@ -222,63 +208,6 @@ public class HistoryCleanupTest {
 
     //then
     assertResult(0);
-  }
-
-  @Test
-  @Ignore
-  public void testHistoryCleanupManualRun333() {
-      //given
-//    prepareData(200);
-
-    ClockUtil.reset();
-    //when
-//    runHistoryCleanup(true);
-
-//    List<HistoricProcessInstance> historicProcessInstances = historyService.createHistoricProcessInstanceQuery().list();
-//    while(historicProcessInstances.size() > 0) {
-//      try {
-//        System.out.println("" + new Date() + ": " + historicProcessInstances.size());
-//        Thread.sleep(10000L);
-//      } catch (InterruptedException e) {
-//        e.printStackTrace();
-//      }
-//      historicProcessInstances = historyService.createHistoricProcessInstanceQuery().list();
-//    }
-//    System.out.println("" + new Date() + ": " + historicProcessInstances.size());
-//
-//    System.exit(0);
-
-    //then
-//    assertResult(0);
-  }
-
-  @Test
-  @Ignore
-  public void testHistoryCleanupManualRun111() {
-
-//    final Random random = new Random();
-//
-//    final int numberOfProcessDefinitions = 100;
-//    final int numberOfProcessInstances = 20000;
-////    for (int i = 1; i <= numberOfProcessDefinitions; i++) {
-////      final BpmnModelInstance modelInstance = Bpmn.createExecutableProcess("process" + i).startEvent().userTask("userTask" + i).endEvent().done();
-////      testRule.deploy(modelInstance);
-////    }
-//
-//    for (int i = 1; i <= numberOfProcessInstances; i++) {
-//      ClockUtil.setCurrentTime(DateUtils.addDays(new Date(), random.nextInt(10) * (-1) + DAYS_IN_THE_PAST));
-//      int processNum = random.nextInt(numberOfProcessDefinitions) + 1;
-//      final String processInstanceId = runtimeService.startProcessInstanceByKey("process" + processNum, Variables.createVariables().putValue("someVar", "someValue"))
-//        .getProcessInstanceId();
-//      if (processNum % 100 > 0) {
-//        final String taskId = engineRule.getTaskService().createTaskQuery().processInstanceId(processInstanceId).singleResult().getId();
-//        engineRule.getTaskService().complete(taskId, Variables.createVariables().putValue("otherVar", "otherValue"));
-//      }
-//
-//    }
-//
-//    System.exit(1);
-
   }
 
   private void runHistoryCleanup() {
