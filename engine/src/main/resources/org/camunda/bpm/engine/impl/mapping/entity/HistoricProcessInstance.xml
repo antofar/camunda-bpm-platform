@@ -434,13 +434,17 @@
     <bind name="days" value="'pd.HISTORY_TTL_'"/>
     <bind name="date" value="'pi.END_TIME_'"/>
     <bind name="currentTimestamp" value="parameter.currentTimestamp"/>
+    <bind name="reportPeriodUnitName" value="'MINUTE'"/>
     FROM ${prefix}ACT_HI_PROCINST pi, ${prefix}ACT_RE_PROCDEF pd
     where
         pi.PROC_DEF_ID_ = pd.ID_
         AND not pi.END_TIME_ is NULL
         AND not pd.HISTORY_TTL_ is NULL
         AND ${dayComparator}
-        AND EXTRACT(MINUTE FROM pi.END_TIME_) between #{parameter.minuteFrom, jdbcType=INTEGER} and #{parameter.minuteTo, jdbcType=INTEGER}
+        <if test="parameter.minuteFrom != null and parameter.minuteTo != null">
+          AND ${datepart1}<include refid="org.camunda.bpm.engine.impl.persistence.entity.ReportResultEntity.periodUnitFunction"/>${datepart2}pi.END_TIME_${datepart3}
+            between #{parameter.minuteFrom, jdbcType=INTEGER} and #{parameter.minuteTo, jdbcType=INTEGER}
+        </if>
     ${limitAfterWithoutOffset}
   </sql>
 

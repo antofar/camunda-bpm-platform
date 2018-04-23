@@ -298,12 +298,16 @@
     <bind name="days" value="'cd.HISTORY_TTL_'"/>
     <bind name="date" value="'ci.CLOSE_TIME_'"/>
     <bind name="currentTimestamp" value="parameter.currentTimestamp"/>
+    <bind name="reportPeriodUnitName" value="'MINUTE'"/>
     FROM ${prefix}ACT_HI_CASEINST ci, ${prefix}ACT_RE_CASE_DEF cd
     where
       ci.CASE_DEF_ID_ = cd.ID_
       AND not cd.HISTORY_TTL_ is NULL
       AND ${dayComparator}
-      AND EXTRACT(MINUTE FROM ci.CLOSE_TIME_) between #{parameter.minuteFrom, jdbcType=INTEGER} and #{parameter.minuteTo, jdbcType=INTEGER}
+    <if test="parameter.minuteFrom != null and parameter.minuteTo != null">
+      AND ${datepart1}<include refid="org.camunda.bpm.engine.impl.persistence.entity.ReportResultEntity.periodUnitFunction"/>${datepart2}ci.CLOSE_TIME_${datepart3}
+      between #{parameter.minuteFrom, jdbcType=INTEGER} and #{parameter.minuteTo, jdbcType=INTEGER}
+    </if>
     ${limitAfterWithoutOffset}
   </sql>
 

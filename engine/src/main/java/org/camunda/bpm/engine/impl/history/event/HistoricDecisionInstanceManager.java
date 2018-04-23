@@ -145,8 +145,10 @@ public class HistoricDecisionInstanceManager extends AbstractHistoricManager {
   public List<String> findHistoricDecisionInstanceIdsForCleanup(Integer batchSize, int minuteFrom, int minuteTo) {
     Map<String, Object> parameters = new HashMap<String, Object>();
     parameters.put("currentTimestamp", ClockUtil.getCurrentTime());
-    parameters.put("minuteFrom", minuteFrom);
-    parameters.put("minuteTo", minuteTo);
+    if (minuteTo - minuteFrom + 1 < 60) {
+      parameters.put("minuteFrom", minuteFrom);
+      parameters.put("minuteTo", minuteTo);
+    }
     ListQueryParameterObject parameterObject = new ListQueryParameterObject(parameters, 0, batchSize);
     return (List<String>) getDbEntityManager().selectList("selectHistoricDecisionInstanceIdsForCleanup", parameterObject);
   }

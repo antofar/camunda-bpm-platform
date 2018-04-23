@@ -111,8 +111,10 @@ public class HistoricCaseInstanceManager extends AbstractHistoricManager {
   public List<String> findHistoricCaseInstanceIdsForCleanup(int batchSize, int minuteFrom, int minuteTo) {
     Map<String, Object> parameters = new HashMap<String, Object>();
     parameters.put("currentTimestamp", ClockUtil.getCurrentTime());
-    parameters.put("minuteFrom", minuteFrom);
-    parameters.put("minuteTo", minuteTo);
+    if (minuteTo - minuteFrom + 1 < 60) {
+      parameters.put("minuteFrom", minuteFrom);
+      parameters.put("minuteTo", minuteTo);
+    }
     ListQueryParameterObject parameterObject = new ListQueryParameterObject(parameters, 0, batchSize);
     return getDbEntityManager().selectList("selectHistoricCaseInstanceIdsForCleanup", parameterObject);
   }

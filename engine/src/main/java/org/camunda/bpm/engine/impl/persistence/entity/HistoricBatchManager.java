@@ -60,9 +60,10 @@ public class HistoricBatchManager extends AbstractManager {
     Map<String, Object> queryParameters = new HashMap<String, Object>();
     queryParameters.put("currentTimestamp", ClockUtil.getCurrentTime());
     queryParameters.put("map", batchOperationsForHistoryCleanup);
-    queryParameters.put("minuteFrom", minuteFrom);
-    queryParameters.put("minuteTo", minuteTo);
-
+    if (minuteTo - minuteFrom + 1 < 60) {
+      queryParameters.put("minuteFrom", minuteFrom);
+      queryParameters.put("minuteTo", minuteTo);
+    }
     ListQueryParameterObject parameterObject = new ListQueryParameterObject(queryParameters, 0, batchSize);
     parameterObject.getOrderingProperties().add(new QueryOrderingProperty(new QueryPropertyImpl("END_TIME_"), Direction.ASCENDING));
 

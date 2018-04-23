@@ -86,6 +86,7 @@
     <choose>
       <when test="reportPeriodUnitName.equals('MONTH')">${constant.datepart.month}</when>
       <when test="reportPeriodUnitName.equals('QUARTER')">${constant.datepart.quarter}</when>
+      <when test="reportPeriodUnitName.equals('MINUTE')">${constant.datepart.minute}</when>
    </choose>
   </sql>
 

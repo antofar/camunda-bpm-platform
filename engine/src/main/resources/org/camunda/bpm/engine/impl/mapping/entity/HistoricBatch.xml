@@ -150,6 +150,7 @@
     <include refid="org.camunda.bpm.engine.impl.persistence.entity.Commons.bindOrderBy"/>
     <bind name="date" value="'RES.END_TIME_'"/>
     <bind name="currentTimestamp" value="parameter.currentTimestamp"/>
+    <bind name="reportPeriodUnitName" value="'MINUTE'"/>
     ${limitBefore}
     SELECT RES.ID_, RES.END_TIME_
     ${limitBetween}
@@ -160,7 +161,10 @@
       RES.TYPE_ = #{key} and ${dayComparator}
     </foreach>
     AND RES.END_TIME_ is not null
-    AND EXTRACT(MINUTE FROM RES.END_TIME_) between #{parameter.minuteFrom, jdbcType=INTEGER} and #{parameter.minuteTo, jdbcType=INTEGER}
+    <if test="parameter.minuteFrom != null and parameter.minuteTo != null">
+      AND ${datepart1}<include refid="org.camunda.bpm.engine.impl.persistence.entity.ReportResultEntity.periodUnitFunction"/>${datepart2}RES.END_TIME_${datepart3}
+      between #{parameter.minuteFrom, jdbcType=INTEGER} and #{parameter.minuteTo, jdbcType=INTEGER}
+    </if>
     ${orderBy}
     ${limitAfter}
   </select>
