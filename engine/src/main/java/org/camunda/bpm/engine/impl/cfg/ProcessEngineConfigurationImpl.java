@@ -14,6 +14,7 @@
 package org.camunda.bpm.engine.impl.cfg;
 
 
+import static org.camunda.bpm.engine.impl.cmd.HistoryCleanupCmd.MAX_THREADS_NUMBER;
 import static org.camunda.bpm.engine.impl.util.EnsureUtil.ensureNotNull;
 
 import java.io.InputStream;
@@ -112,6 +113,7 @@ import org.camunda.bpm.engine.impl.cfg.auth.ResourceAuthorizationProvider;
 import org.camunda.bpm.engine.impl.cfg.multitenancy.TenantCommandChecker;
 import org.camunda.bpm.engine.impl.cfg.multitenancy.TenantIdProvider;
 import org.camunda.bpm.engine.impl.cfg.standalone.StandaloneTransactionContextFactory;
+import org.camunda.bpm.engine.impl.cmd.HistoryCleanupCmd;
 import org.camunda.bpm.engine.impl.cmmn.CaseServiceImpl;
 import org.camunda.bpm.engine.impl.cmmn.deployer.CmmnDeployer;
 import org.camunda.bpm.engine.impl.cmmn.entity.repository.CaseDefinitionManager;
@@ -794,6 +796,12 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
   }
 
   public void initHistoryCleanup() {
+    //validate number of threads
+    if (historyCleanupNumberOfThreads < 1 || historyCleanupNumberOfThreads > MAX_THREADS_NUMBER) {
+      throw LOG.invalidPropertyValue("historyCleanupNumberOfThreads", String.valueOf(historyCleanupNumberOfThreads),
+        String.format("value for number of threads for history cleanup should be between 1 and %s", HistoryCleanupCmd.HISTORY_CLEANUP_JOB_DECLARATION));
+    }
+
     if (historyCleanupBatchWindowStartTime != null) {
       initHistoryCleanupBatchWindowStartTime();
     }

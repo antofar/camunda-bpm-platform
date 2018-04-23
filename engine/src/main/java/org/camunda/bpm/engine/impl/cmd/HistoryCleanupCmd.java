@@ -40,6 +40,8 @@ public class HistoryCleanupCmd implements Command<Job> {
 
   public static final JobDeclaration HISTORY_CLEANUP_JOB_DECLARATION = new HistoryCleanupJobDeclaration();
 
+  public static final int MAX_THREADS_NUMBER = 4;
+
   private boolean immediatelyDue;
 
   public HistoryCleanupCmd(boolean immediatelyDue) {
