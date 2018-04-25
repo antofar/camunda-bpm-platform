@@ -13,6 +13,12 @@
 
 package org.camunda.bpm.engine.impl.persistence.entity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.camunda.bpm.engine.ProcessEngineException;
 import org.camunda.bpm.engine.impl.Page;
 import org.camunda.bpm.engine.impl.ProcessDefinitionQueryImpl;
@@ -28,11 +34,6 @@ import org.camunda.bpm.engine.impl.persistence.AbstractManager;
 import org.camunda.bpm.engine.impl.persistence.AbstractResourceDefinitionManager;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
 import org.camunda.bpm.engine.runtime.Job;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -187,7 +188,7 @@ public class ProcessDefinitionManager extends AbstractManager implements Abstrac
   }
 
   @SuppressWarnings("unchecked")
-  public List<ProcessDefinition> findDefinitionsByIds(List<String> processDefinitionIds) {
+  public List<ProcessDefinition> findDefinitionsByIds(Set<String> processDefinitionIds) {
     Map<String, Object> parameters = new HashMap<String, Object>();
     parameters.put("processDefinitionIds", processDefinitionIds);
     parameters.put("isTenantIdSet", false);
@@ -362,7 +363,6 @@ public class ProcessDefinitionManager extends AbstractManager implements Abstrac
     getJobDefinitionManager().deleteJobDefinitionsByProcessDefinitionId(processDefinition.getId());
 
   }
-
 
   // helper ///////////////////////////////////////////////////////////
 
