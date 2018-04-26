@@ -73,9 +73,16 @@ public class DeleteProcessDefinitionsByIdsCmd implements Command<Void>, Serializ
   public Void execute(CommandContext commandContext) {
     ensureNotNull("processDefinitionIds", processDefinitionIds);
 
-    ProcessDefinitionManager processDefinitionManager = commandContext.getProcessDefinitionManager();
-    List<ProcessDefinition> processDefinitions = processDefinitionManager.findDefinitionsByIds(processDefinitionIds);
-    ensureNotEmpty(NotFoundException.class, "No process definition found", "processDefinitions", processDefinitions);
+    List<ProcessDefinition> processDefinitions;
+    if (processDefinitionIds.size() == 1) {
+      ProcessDefinition processDefinition = getSingleProcessDefinition(commandContext);
+      processDefinitions = new ArrayList<ProcessDefinition>();
+      processDefinitions.add(processDefinition);
+    } else {
+      ProcessDefinitionManager processDefinitionManager = commandContext.getProcessDefinitionManager();
+      processDefinitions = processDefinitionManager.findDefinitionsByIds(processDefinitionIds);
+      ensureNotEmpty(NotFoundException.class, "No process definition found", "processDefinitions", processDefinitions);
+    }
 
     Set<ProcessDefinitionGroup> groups = groupByKeyAndTenant(processDefinitions);
 
@@ -88,6 +95,15 @@ public class DeleteProcessDefinitionsByIdsCmd implements Command<Void>, Serializ
     }
 
     return null;
+  }
+
+  protected ProcessDefinition getSingleProcessDefinition(CommandContext commandContext) {
+    String processDefinitionId = processDefinitionIds.iterator().next();
+    ensureNotNull("processDefinitionId", processDefinitionId);
+    ProcessDefinition processDefinition = commandContext.getProcessDefinitionManager().findLatestProcessDefinitionById(processDefinitionId);
+    ensureNotNull(NotFoundException.class, "No process definition found with id '" + processDefinitionId + "'", "processDefinition", processDefinition);
+
+    return processDefinition;
   }
 
   protected Set<ProcessDefinitionGroup> groupByKeyAndTenant(List<ProcessDefinition> processDefinitions) {
